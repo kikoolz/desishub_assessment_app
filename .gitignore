@@ -50,3 +50,6 @@ SETUP.md
 .cursor
 .cursor/
 **/.cursor/
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
