@@ -1,0 +1,55 @@
+// Prisma Schema for Desishub Platform
+// This schema defines the database structure for candidates and admin users
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Candidate {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String
+  linkedIn  String?
+
+  // Assessment Responses (stored as JSON for flexibility)
+  webTechnologies   String[]  // ['html', 'css', 'javascript', 'react', 'nextjs']
+  canBuildCRUD      String    // 'no' | 'without-db' | 'with-db'
+  canImplementAuth  String    // 'no' | 'basic' | 'oauth'
+  backendFrameworks String[]  // ['none', 'express', 'hono', 'laravel', 'other']
+  knowsGolang       String    // 'no' | 'basics' | 'can-build-apis'
+  hasDeployed       String    // 'no' | 'frontend-only' | 'fullstack'
+  canBuildAuthAPI   String    // 'no' | 'nextjs-only' | 'express-hono' | 'multiple'
+
+  // Calculated Results
+  assignedTier      Int
+  tierName          String
+  tierDescription   String
+  recommendations   String[]  // Array of recommendation strings
+
+  // Metadata
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([assignedTier])
+  @@index([email])
+  @@index([createdAt])
+  @@map("candidates")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
